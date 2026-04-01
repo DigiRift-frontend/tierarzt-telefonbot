@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { AudioPlayer } from "@/components/AudioPlayer";
-import { DemoGate } from "@/components/DemoGate";
 
 interface Demo {
   id: string;
@@ -142,9 +141,7 @@ export default function DemoPage() {
             </div>
             );
 
-            // First demo is free, rest are gated
-            if (index === 0) return card;
-            return <DemoGate key={demo.id}>{card}</DemoGate>;
+            return card;
           })}
         </div>
       </section>
