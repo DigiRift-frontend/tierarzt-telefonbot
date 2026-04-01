@@ -8,42 +8,49 @@ export default function RatgeberPage() {
   const [praxisName, setPraxisName] = useState("");
   const [newsletter, setNewsletter] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [done, setDone] = useState(false);
+  const [phase, setPhase] = useState<"form" | "confirm" | "redirect">("form");
   const [error, setError] = useState("");
+  const [redirectUrl, setRedirectUrl] = useState("");
 
   const submit = async () => {
     if (!email || !email.includes("@")) {
-      setError("Bitte geben Sie eine gültige E-Mail-Adresse ein.");
+      setError("Bitte geben Sie eine gueltige E-Mail-Adresse ein.");
       return;
     }
     setError("");
     setSubmitting(true);
 
     try {
-      await fetch("/api/lead", {
+      const res = await fetch("/api/ebook-submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "ebook",
-          email,
-          praxisName,
-          newsletterOptIn: newsletter,
-        }),
+        body: JSON.stringify({ email, praxisName, newsletterOptIn: newsletter }),
       });
+      const data = await res.json();
+
+      if (data.alreadyConfirmed && data.downloadUrl) {
+        setRedirectUrl(data.downloadUrl);
+        setPhase("redirect");
+        // Auto-redirect after short delay
+        setTimeout(() => {
+          window.location.href = data.downloadUrl;
+        }, 2000);
+      } else {
+        setPhase("confirm");
+      }
     } catch {
-      // Continue to download even if API fails
+      setError("Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.");
     }
 
     setSubmitting(false);
-    setDone(true);
   };
 
   const chapters = [
     { icon: "gavel", title: "Was darf ein KI-Telefonbot in der Tierarztpraxis? Was nicht?" },
-    { icon: "checklist", title: "DSGVO-Anforderungen Schritt für Schritt erklärt" },
-    { icon: "description", title: "AV-Vertrag Checkliste — worauf Sie achten müssen" },
-    { icon: "policy", title: "EU-AI-Act: Was bedeutet das konkret für Ihre Praxis?" },
-    { icon: "lightbulb", title: "5 Praxis-Tipps für den datenschutzkonformen Einsatz" },
+    { icon: "checklist", title: "DSGVO-Anforderungen Schritt fuer Schritt erklaert" },
+    { icon: "description", title: "AV-Vertrag Checkliste — worauf Sie achten muessen" },
+    { icon: "policy", title: "EU-AI-Act: Was bedeutet das konkret fuer Ihre Praxis?" },
+    { icon: "lightbulb", title: "5 Praxis-Tipps fuer den datenschutzkonformen Einsatz" },
   ];
 
   return (
@@ -54,12 +61,12 @@ export default function RatgeberPage() {
             Kostenloser Ratgeber
           </span>
           <h1 className="text-4xl md:text-5xl font-[family-name:var(--font-headline)] font-extrabold text-on-surface tracking-tight leading-[1.1] mb-8">
-            DSGVO-Leitfaden für{" "}
+            DSGVO-Leitfaden fuer{" "}
             <span className="text-primary">KI-Telefonie in der Tierarztpraxis</span>
           </h1>
           <p className="text-xl text-on-surface-variant leading-relaxed max-w-2xl mx-auto">
-            Alles was Sie über Datenschutz, AV-Verträge und den EU-AI-Act wissen müssen —
-            verständlich erklärt, mit konkreten Checklisten.
+            Alles was Sie ueber Datenschutz, AV-Vertraege und den EU-AI-Act wissen muessen —
+            verstaendlich erklaert, mit konkreten Checklisten.
           </p>
         </div>
       </section>
@@ -69,7 +76,6 @@ export default function RatgeberPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             {/* Left: Content Preview */}
             <div>
-              {/* E-Book Mockup */}
               <div className="bg-gradient-to-br from-primary to-primary-container rounded-3xl p-10 mb-8 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
                 <div className="relative z-10 text-on-primary">
@@ -82,12 +88,11 @@ export default function RatgeberPage() {
                   </p>
                   <div className="mt-6 flex items-center gap-2 text-sm opacity-70">
                     <span className="material-symbols-outlined text-base">picture_as_pdf</span>
-                    PDF · 12 Seiten · Kostenlos
+                    PDF · 8 Seiten · Kostenlos
                   </div>
                 </div>
               </div>
 
-              {/* Chapters */}
               <h3 className="font-[family-name:var(--font-headline)] font-bold text-lg text-on-surface mb-6">
                 Das erwartet Sie:
               </h3>
@@ -103,36 +108,45 @@ export default function RatgeberPage() {
               </div>
             </div>
 
-            {/* Right: Download Form */}
+            {/* Right: Form / Confirmation */}
             <div className="lg:sticky lg:top-28">
-              {done ? (
+              {phase === "confirm" ? (
                 <div className="bg-surface-container-lowest rounded-3xl p-10 shadow-sm border border-outline-variant/10 text-center">
                   <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-6">
-                    <span className="material-symbols-outlined text-3xl">download_done</span>
+                    <span className="material-symbols-outlined text-3xl">mark_email_read</span>
                   </div>
                   <h3 className="text-xl font-[family-name:var(--font-headline)] font-bold text-on-surface mb-4">
-                    Ihr Leitfaden ist bereit!
+                    Bitte E-Mail bestaetigen
                   </h3>
-                  <a
-                    href="/downloads/dsgvo-leitfaden-tierarzt.pdf"
-                    download
-                    className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-primary-container text-on-primary px-8 py-4 rounded-full font-[family-name:var(--font-headline)] font-bold shadow-xl shadow-primary/20 hover:scale-105 transition-transform mb-6"
-                  >
-                    <span className="material-symbols-outlined">download</span>
-                    PDF herunterladen
-                  </a>
-                  <p className="text-sm text-on-surface-variant">
-                    Wir haben Ihnen den Leitfaden auch per E-Mail gesendet.
+                  <p className="text-on-surface-variant mb-2">
+                    Wir haben Ihnen eine E-Mail an <strong className="text-on-surface">{email}</strong> gesendet.
                   </p>
-                  <div className="mt-8 pt-8 border-t border-outline-variant/20">
-                    <p className="text-sm text-on-surface-variant mb-4">Nächster Schritt:</p>
-                    <Link
-                      href="/kontakt"
-                      className="inline-flex text-primary font-[family-name:var(--font-headline)] font-bold hover:underline"
-                    >
-                      Kostenloses Erstgespräch vereinbaren →
-                    </Link>
+                  <p className="text-on-surface-variant mb-6">
+                    Klicken Sie auf den Bestaetigungslink, um den Leitfaden herunterzuladen.
+                  </p>
+                  <div className="bg-surface-container-low rounded-2xl p-4 text-sm text-on-surface-variant">
+                    <span className="material-symbols-outlined text-base align-middle mr-1">info</span>
+                    Keine E-Mail erhalten? Pruefen Sie Ihren Spam-Ordner.
                   </div>
+                </div>
+              ) : phase === "redirect" ? (
+                <div className="bg-surface-container-lowest rounded-3xl p-10 shadow-sm border border-outline-variant/10 text-center">
+                  <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
+                    <span className="material-symbols-outlined text-3xl">download</span>
+                  </div>
+                  <h3 className="text-xl font-[family-name:var(--font-headline)] font-bold text-on-surface mb-4">
+                    E-Mail bereits bestaetigt!
+                  </h3>
+                  <p className="text-on-surface-variant mb-6">
+                    Sie werden zum Download weitergeleitet...
+                  </p>
+                  <a
+                    href={redirectUrl}
+                    className="inline-flex items-center gap-2 text-primary font-[family-name:var(--font-headline)] font-bold hover:underline"
+                  >
+                    Falls nicht, hier klicken
+                    <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                  </a>
                 </div>
               ) : (
                 <div className="bg-surface-container-lowest rounded-3xl p-10 shadow-sm border border-outline-variant/10">
@@ -172,7 +186,7 @@ export default function RatgeberPage() {
                         className="mt-1 rounded border-outline-variant text-primary focus:ring-primary"
                       />
                       <span className="text-sm text-on-surface-variant">
-                        Ja, ich möchte gelegentlich Praxis-Tipps zu KI-Telefonie erhalten.
+                        Ja, ich moechte gelegentlich Praxis-Tipps zu KI-Telefonie erhalten.
                       </span>
                     </label>
 
@@ -184,14 +198,14 @@ export default function RatgeberPage() {
                       disabled={submitting}
                       className="w-full bg-gradient-to-r from-primary to-primary-container text-on-primary px-8 py-4 rounded-full font-[family-name:var(--font-headline)] font-bold text-lg shadow-xl shadow-primary/20 hover:scale-[1.02] transition-transform disabled:opacity-50 cursor-pointer"
                     >
-                      {submitting ? "Wird vorbereitet..." : "Leitfaden herunterladen"}
+                      {submitting ? "Wird vorbereitet..." : "Leitfaden anfordern"}
                     </button>
                   </div>
 
                   <p className="text-xs text-on-surface-variant text-center mt-4">
                     Ihre Daten werden vertraulich behandelt.{" "}
                     <Link href="/datenschutz" className="text-primary hover:underline">
-                      Datenschutzerklärung
+                      Datenschutzerklaerung
                     </Link>
                   </p>
                 </div>
