@@ -83,3 +83,11 @@ body {
   background: var(--color-primary-container);
   color: var(--color-on-primary-container);
 }
+
+@media print {
+  nav, footer { display: none !important; }
+  main { padding: 0 !important; }
+  body { min-height: auto; }
+  /* Hide cookie banner + backdrop in print/PDF */
+  .fixed { display: none !important; }
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 /* ------------------------------------------------------------------ */
@@ -116,9 +117,10 @@ function calculate(answers: Record<string, number>): CalcResult {
 /* Component                                                           */
 /* ------------------------------------------------------------------ */
 
-type Phase = "quiz" | "email" | "result";
+type Phase = "quiz" | "email" | "confirm";
 
 export default function CheckPage() {
+  const router = useRouter();
   const [phase, setPhase] = useState<Phase>("quiz");
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
@@ -149,24 +151,30 @@ export default function CheckPage() {
     setSubmitting(true);
 
     try {
-      await fetch("/api/lead", {
+      const res = await fetch("/api/quiz-submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          type: "quiz",
           email,
           praxisName,
           quizAnswers: answers,
           quizScore: result.totalLossPerMonth,
-          newsletterOptIn: newsletter,
         }),
       });
+      const data = await res.json();
+
+      // If email already confirmed in DigiLetter, go directly to results
+      if (data.alreadyConfirmed && data.resultUrl) {
+        setSubmitting(false);
+        router.push(data.resultUrl);
+        return;
+      }
     } catch {
-      // Show result even if API fails
+      // Continue to confirmation even if API fails
     }
 
     setSubmitting(false);
-    setPhase("result");
+    setPhase("confirm");
   };
 
   const formatEuro = (n: number) =>
@@ -323,156 +331,35 @@ export default function CheckPage() {
     );
   }
 
-  /* --- Result Phase --- */
-  const severityColor =
-    result.severity === "high"
-      ? "#ef4444"
-      : result.severity === "medium"
-        ? "#f97316"
-        : "#22c55e";
-
-  const severityLabel =
-    result.severity === "high"
-      ? "Hoher Umsatzverlust"
-      : result.severity === "medium"
-        ? "Spürbarer Umsatzverlust"
-        : "Moderates Potenzial";
-
+  /* --- Confirm Phase (check your email) --- */
   return (
-    <section className="min-h-screen bg-surface py-20 px-6">
-      <div className="max-w-2xl mx-auto">
-        {/* Hero Number */}
-        <div className="text-center mb-12">
-          <p className="text-on-surface-variant text-sm mb-2 uppercase tracking-wider font-semibold">
-            Geschätzter monatlicher Umsatzverlust
-          </p>
-          <div className="text-5xl md:text-7xl font-[family-name:var(--font-headline)] font-extrabold mb-4" style={{ color: severityColor }}>
-            {formatEuro(result.totalLossPerMonth)}
-          </div>
-          <p className="text-on-surface-variant">
-            pro Monat durch verpasste Anrufe
-          </p>
+    <section className="min-h-screen bg-surface flex items-center justify-center px-6 py-20">
+      <div className="max-w-md text-center">
+        <div className="w-20 h-20 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-6">
+          <span className="material-symbols-outlined text-4xl">mark_email_read</span>
         </div>
+        <h1 className="text-2xl md:text-3xl font-[family-name:var(--font-headline)] font-bold text-on-surface mb-4">
+          Prüfen Sie Ihr Postfach
+        </h1>
+        <p className="text-on-surface-variant mb-2">
+          Wir haben eine E-Mail an <strong className="text-on-surface">{email}</strong> gesendet.
+        </p>
+        <p className="text-on-surface-variant mb-8">
+          Klicken Sie auf den Bestätigungslink in der E-Mail, um Ihre persönliche Kostenanalyse zu sehen.
+        </p>
 
-        {/* Breakdown */}
-        <div className="bg-surface-container-lowest rounded-3xl p-8 shadow-sm border border-outline-variant/10 mb-6">
-          <h2 className="font-[family-name:var(--font-headline)] font-bold text-lg text-on-surface mb-6">
-            So setzt sich der Verlust zusammen
-          </h2>
-          <div className="space-y-5">
-            <div className="flex justify-between items-center py-3 border-b border-outline-variant/10">
-              <div className="flex items-center gap-3">
-                <span className="material-symbols-outlined text-primary">phone_missed</span>
-                <span className="text-on-surface-variant">Verpasste Anrufe pro Tag</span>
-              </div>
-              <span className="font-[family-name:var(--font-headline)] font-bold text-on-surface text-lg">
-                ~{result.missedCallsPerDay}
-              </span>
-            </div>
-            <div className="flex justify-between items-center py-3 border-b border-outline-variant/10">
-              <div className="flex items-center gap-3">
-                <span className="material-symbols-outlined text-primary">event_busy</span>
-                <span className="text-on-surface-variant">Verpasste Anrufe pro Monat</span>
-              </div>
-              <span className="font-[family-name:var(--font-headline)] font-bold text-on-surface text-lg">
-                ~{result.missedCallsPerMonth}
-              </span>
-            </div>
-            <div className="flex justify-between items-center py-3 border-b border-outline-variant/10">
-              <div className="flex items-center gap-3">
-                <span className="material-symbols-outlined text-primary">person_off</span>
-                <span className="text-on-surface-variant">Verlorene Neukunden pro Monat</span>
-              </div>
-              <span className="font-[family-name:var(--font-headline)] font-bold text-on-surface text-lg">
-                ~{result.lostCustomersPerMonth}
-              </span>
-            </div>
-            <div className="flex justify-between items-center py-3 border-b border-outline-variant/10">
-              <div className="flex items-center gap-3">
-                <span className="material-symbols-outlined text-primary">money_off</span>
-                <span className="text-on-surface-variant">Umsatzverlust (Sprechzeiten)</span>
-              </div>
-              <span className="font-[family-name:var(--font-headline)] font-bold text-on-surface text-lg">
-                {formatEuro(result.lostRevenuePerMonth)}
-              </span>
-            </div>
-            {result.afterHoursLoss > 0 && (
-              <div className="flex justify-between items-center py-3 border-b border-outline-variant/10">
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-primary">nightlight</span>
-                  <span className="text-on-surface-variant">Verlust außerhalb der Sprechzeiten</span>
-                </div>
-                <span className="font-[family-name:var(--font-headline)] font-bold text-on-surface text-lg">
-                  {formatEuro(result.afterHoursLoss)}
-                </span>
-              </div>
-            )}
-            <div className="flex justify-between items-center pt-4">
-              <span className="font-[family-name:var(--font-headline)] font-bold text-on-surface">
-                Gesamtverlust pro Monat
-              </span>
-              <span className="font-[family-name:var(--font-headline)] font-extrabold text-2xl" style={{ color: severityColor }}>
-                {formatEuro(result.totalLossPerMonth)}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Context */}
-        <div className="bg-surface-container-lowest rounded-3xl p-8 shadow-sm border border-outline-variant/10 mb-6">
+        <div className="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/10 text-left">
           <div className="flex items-start gap-4">
-            <span className="material-symbols-outlined text-primary text-2xl mt-1">info</span>
-            <div>
-              <h3 className="font-[family-name:var(--font-headline)] font-bold text-on-surface mb-2">
-                Was bedeutet das?
-              </h3>
-              <p className="text-on-surface-variant leading-relaxed">
-                {result.severity === "high"
-                  ? `Ihre Praxis verliert schätzungsweise ${formatEuro(result.totalLossPerMonth * 12)} pro Jahr. Das sind ${result.lostCustomersPerMonth} Tierbesitzer jeden Monat, die nie wiederkommen — weil sie Sie einfach nicht erreicht haben.`
-                  : result.severity === "medium"
-                    ? `${formatEuro(result.totalLossPerMonth * 12)} pro Jahr sind ${result.lostCustomersPerMonth} verlorene Kunden jeden Monat. Jeder einzelne davon hätte ein treuer Stammkunde werden können.`
-                    : `Auch ${formatEuro(result.totalLossPerMonth * 12)} pro Jahr sind Geld, das auf dem Tisch liegen bleibt. Mit besserer Erreichbarkeit könnten Sie ${result.lostCustomersPerMonth} zusätzliche Kunden pro Monat gewinnen.`}
-              </p>
+            <span className="material-symbols-outlined text-primary text-xl mt-0.5">info</span>
+            <div className="text-sm text-on-surface-variant">
+              <p className="mb-2"><strong className="text-on-surface">Keine E-Mail erhalten?</strong></p>
+              <ul className="space-y-1">
+                <li>Prüfen Sie Ihren Spam-Ordner</li>
+                <li>Die E-Mail kommt von <strong>newsletter@digirift.com</strong></li>
+                <li>Der Link ist 48 Stunden gültig</li>
+              </ul>
             </div>
           </div>
-        </div>
-
-        {/* Solution Hint */}
-        <div className="bg-primary/5 rounded-3xl p-8 mb-12">
-          <h3 className="font-[family-name:var(--font-headline)] font-bold text-on-surface mb-4">
-            Die Lösung: Ein KI-Telefonbot, der keinen Anruf verpasst
-          </h3>
-          <ul className="space-y-3">
-            {[
-              "Nimmt jeden Anruf an — auch während OPs, Stoßzeiten und nach Feierabend",
-              "Bucht Termine direkt in Ihren Kalender",
-              "Erkennt Notfälle und leitet sofort an Sie weiter",
-              "Wir richten alles ein — Sie müssen sich um nichts kümmern",
-            ].map((item) => (
-              <li key={item} className="flex items-start gap-3">
-                <span className="material-symbols-outlined text-primary text-lg mt-0.5">check_circle</span>
-                <span className="text-on-surface-variant">{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* CTAs */}
-        <div className="space-y-4 text-center">
-          <Link
-            href="/kontakt"
-            className="inline-flex bg-gradient-to-r from-primary to-primary-container text-on-primary px-10 py-5 rounded-full font-[family-name:var(--font-headline)] font-bold text-xl shadow-xl shadow-primary/20 hover:scale-105 transition-transform"
-          >
-            Kostenloses Erstgespräch vereinbaren
-          </Link>
-          <br />
-          <Link
-            href="/demo"
-            className="inline-flex items-center gap-2 text-primary font-[family-name:var(--font-headline)] font-bold hover:gap-4 transition-all mt-4"
-          >
-            <span className="material-symbols-outlined">play_circle</span>
-            Hören Sie wie Ihr Bot klingen würde
-          </Link>
         </div>
       </div>
     </section>
