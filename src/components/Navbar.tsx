@@ -17,10 +17,21 @@ export function Navbar() {
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl shadow-sm h-20">
-      <div className="flex justify-between items-center max-w-7xl mx-auto px-6 h-full">
+      <div className="flex justify-between items-center max-w-7xl mx-auto px-4 sm:px-6 h-full">
+        {/* Mobile: Burger left */}
+        <button
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="md:hidden p-2 -ml-1"
+          aria-label="Menü öffnen"
+        >
+          <span className="material-symbols-outlined text-on-surface text-2xl">
+            {mobileOpen ? "close" : "menu"}
+          </span>
+        </button>
+
         <Link
           href="/"
-          className="text-xl font-bold text-primary font-[family-name:var(--font-headline)] tracking-tight"
+          className="text-lg sm:text-xl font-bold text-primary font-[family-name:var(--font-headline)] tracking-tight"
         >
           tierarzt-telefonbot.de
         </Link>
@@ -37,24 +48,15 @@ export function Navbar() {
           ))}
         </div>
 
-        <div className="flex items-center gap-4">
-          <Link
-            href="/kontakt"
-            className="hidden sm:inline-flex bg-gradient-to-r from-primary to-primary-container text-on-primary px-6 py-2.5 rounded-full font-[family-name:var(--font-headline)] font-bold text-sm tracking-wide shadow-lg shadow-primary/20 hover:opacity-90 transition-all"
-          >
-            Erstgespräch vereinbaren
-          </Link>
+        <Link
+          href="/kontakt"
+          className="hidden md:inline-flex bg-gradient-to-r from-primary to-primary-container text-on-primary px-6 py-2.5 rounded-full font-[family-name:var(--font-headline)] font-bold text-sm tracking-wide shadow-lg shadow-primary/20 hover:opacity-90 transition-all"
+        >
+          Erstgespräch vereinbaren
+        </Link>
 
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2"
-            aria-label="Menü öffnen"
-          >
-            <span className="material-symbols-outlined text-on-surface">
-              {mobileOpen ? "close" : "menu"}
-            </span>
-          </button>
-        </div>
+        {/* Mobile: spacer to balance burger on left */}
+        <div className="w-10 md:hidden" />
       </div>
 
       {mobileOpen && (
