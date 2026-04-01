@@ -162,11 +162,13 @@ export async function POST(request: Request) {
       newsletterOptIn: body.newsletterOptIn,
     }));
 
-    // Send to both systems in parallel
-    await Promise.all([
-      subscribeToDigiLetter(body),
-      createCrmLead(body),
-    ]);
+    // CRM: immer
+    // DigiLetter: nur bei Quiz-Ergebnis und E-Book — NICHT bei Kontaktformular
+    const tasks: Promise<void>[] = [createCrmLead(body)];
+    if (body.type !== "contact") {
+      tasks.push(subscribeToDigiLetter(body));
+    }
+    await Promise.all(tasks);
 
     return NextResponse.json({ success: true });
   } catch {
