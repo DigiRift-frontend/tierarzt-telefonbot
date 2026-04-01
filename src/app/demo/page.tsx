@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { AudioPlayer } from "@/components/AudioPlayer";
+import { BreadcrumbSchema } from "@/components/Breadcrumbs";
 
 interface Demo {
   id: string;
@@ -77,9 +78,15 @@ const demos: Demo[] = [
   },
 ];
 
+const BASE = "https://tierarzt-telefonbot.de";
+
 export default function DemoPage() {
   return (
     <>
+      <BreadcrumbSchema items={[
+        { name: "Home", url: BASE },
+        { name: "Demo", url: `${BASE}/demo` },
+      ]} />
       <section className="pt-32 pb-16 md:pt-44 md:pb-20 bg-surface">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <span className="inline-block px-4 py-1.5 bg-primary-container/10 text-primary font-semibold text-xs tracking-widest rounded-full mb-6 uppercase">

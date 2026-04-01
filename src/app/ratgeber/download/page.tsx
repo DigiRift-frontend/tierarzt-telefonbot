@@ -1,10 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 export default function EbookDownloadPage() {
+  return (
+    <Suspense fallback={
+      <section className="pt-32 pb-24 md:pt-44 bg-surface min-h-screen">
+        <div className="max-w-2xl mx-auto px-6 text-center">
+          <div className="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
+            <span className="material-symbols-outlined text-3xl">hourglass_top</span>
+          </div>
+          <h1 className="text-2xl font-[family-name:var(--font-headline)] font-bold text-on-surface">
+            Wird geladen...
+          </h1>
+        </div>
+      </section>
+    }>
+      <EbookDownloadContent />
+    </Suspense>
+  );
+}
+
+function EbookDownloadContent() {
   const params = useSearchParams();
   const token = params.get("t");
 

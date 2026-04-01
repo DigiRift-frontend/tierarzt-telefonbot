@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { BreadcrumbSchema } from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "So funktioniert's — Ihr Weg zum KI-Telefonbot",
@@ -76,9 +77,15 @@ const afterLaunch = [
   },
 ];
 
+const BASE = "https://tierarzt-telefonbot.de";
+
 export default function SoFunktionierts() {
   return (
     <>
+      <BreadcrumbSchema items={[
+        { name: "Home", url: BASE },
+        { name: "So funktioniert's", url: `${BASE}/so-funktionierts` },
+      ]} />
       <section className="pt-32 pb-16 md:pt-44 md:pb-20 bg-surface">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <span className="inline-block px-4 py-1.5 bg-primary-container/10 text-primary font-semibold text-xs tracking-widest rounded-full mb-6 uppercase">

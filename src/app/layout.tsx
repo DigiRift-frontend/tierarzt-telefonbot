@@ -16,6 +16,25 @@ export const metadata: Metadata = {
     type: "website",
     locale: "de_DE",
     siteName: "tierarzt-telefonbot.de",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "tierarzt-telefonbot.de — KI-Telefonbot fuer Tierarztpraxen",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "KI-Telefonbot fuer Tieraerzte | tierarzt-telefonbot.de",
+    description:
+      "Der KI-Telefonbot fuer Ihre Tierarztpraxis. Notfall-Triage, Terminbuchung, Rezeptbestellungen — Full-Service von DigiRift.",
+    images: ["/opengraph-image"],
+  },
+  manifest: "/manifest.json",
+  alternates: {
+    canonical: "./",
   },
 };
 
@@ -39,6 +58,70 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "@id": "https://tierarzt-telefonbot.de/#organization",
+                  name: "DigiRift GmbH",
+                  url: "https://tierarzt-telefonbot.de",
+                  logo: "https://tierarzt-telefonbot.de/icon.svg",
+                  sameAs: ["https://digirift.com"],
+                  contactPoint: {
+                    "@type": "ContactPoint",
+                    contactType: "customer service",
+                    email: "info@digirift.com",
+                    availableLanguage: "German",
+                  },
+                  address: {
+                    "@type": "PostalAddress",
+                    streetAddress: "Rothenbaumchaussee 17",
+                    addressLocality: "Hamburg",
+                    postalCode: "20148",
+                    addressCountry: "DE",
+                  },
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": "https://tierarzt-telefonbot.de/#website",
+                  url: "https://tierarzt-telefonbot.de",
+                  name: "tierarzt-telefonbot.de",
+                  publisher: { "@id": "https://tierarzt-telefonbot.de/#organization" },
+                  inLanguage: "de-DE",
+                },
+                {
+                  "@type": "Service",
+                  "@id": "https://tierarzt-telefonbot.de/#service",
+                  name: "KI-Telefonbot fuer Tierarztpraxen",
+                  description:
+                    "Intelligenter KI-Telefonbot fuer Tierarztpraxen. Notfall-Triage, Terminbuchung, Rezeptbestellungen, Impf-Erinnerungen — 24/7, DSGVO-konform, Full-Service.",
+                  provider: { "@id": "https://tierarzt-telefonbot.de/#organization" },
+                  serviceType: "KI-Telefonie",
+                  areaServed: { "@type": "Country", name: "Germany" },
+                  hasOfferCatalog: {
+                    "@type": "OfferCatalog",
+                    name: "KI-Telefonbot Pakete",
+                    itemListElement: [
+                      {
+                        "@type": "Offer",
+                        itemOffered: {
+                          "@type": "Service",
+                          name: "KI-Telefonbot Full-Service",
+                          description:
+                            "Komplettloesung: Einrichtung, Training, laufende Optimierung, DSGVO-Dokumentation, AV-Vertrag inklusive.",
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            }),
+          }}
+        />
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

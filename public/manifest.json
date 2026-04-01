@@ -1,0 +1,16 @@
+{
+  "name": "tierarzt-telefonbot.de — KI-Telefonbot fuer Tierarztpraxen",
+  "short_name": "Telefonbot",
+  "description": "Der KI-Telefonbot fuer Ihre Tierarztpraxis. Notfall-Triage, Terminbuchung, Rezeptbestellungen.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafa",
+  "theme_color": "#006067",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

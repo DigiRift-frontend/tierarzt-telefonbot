@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { BreadcrumbSchema } from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Anwendungsfälle — KI-Telefonbot für Tierärzte",
@@ -85,8 +86,15 @@ const useCases = [
   },
 ];
 
+const BASE = "https://tierarzt-telefonbot.de";
+
 export default function AnwendungsfaellePage() {
   return (
+    <>
+      <BreadcrumbSchema items={[
+        { name: "Home", url: BASE },
+        { name: "Anwendungsfaelle", url: `${BASE}/anwendungsfaelle` },
+      ]} />
     <>
       <section className="pt-32 pb-16 md:pt-44 md:pb-20 bg-surface">
         <div className="max-w-4xl mx-auto px-6 text-center">
@@ -166,6 +174,7 @@ export default function AnwendungsfaellePage() {
           </Link>
         </div>
       </section>
+    </>
     </>
   );
 }

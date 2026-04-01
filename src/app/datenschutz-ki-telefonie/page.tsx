@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { BreadcrumbSchema } from "@/components/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "DSGVO & KI-Telefonie — Datenschutz in der Tierarztpraxis",
@@ -50,9 +51,15 @@ const sections = [
   },
 ];
 
+const BASE = "https://tierarzt-telefonbot.de";
+
 export default function DatenschutzKiTelefoniePage() {
   return (
     <>
+      <BreadcrumbSchema items={[
+        { name: "Home", url: BASE },
+        { name: "DSGVO & KI-Telefonie", url: `${BASE}/datenschutz-ki-telefonie` },
+      ]} />
       <section className="pt-32 pb-16 md:pt-44 md:pb-20 bg-surface">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <span className="inline-block px-4 py-1.5 bg-primary-container/10 text-primary font-semibold text-xs tracking-widest rounded-full mb-6 uppercase">
