@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
+import { sendLead } from "@/lib/send-lead";
 
 interface QuizResult {
   email: string;
@@ -89,16 +90,12 @@ function ResultContent() {
     if (!data || crmSent) return;
     setCrmSent(true);
 
-    fetch("/api/lead", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        type: "quiz",
-        email: data.email,
-        praxisName: data.praxisName,
-        quizAnswers: data.quizAnswers,
-        quizScore: data.quizScore,
-      }),
+    sendLead({
+      type: "quiz",
+      email: data.email,
+      praxisName: data.praxisName,
+      quizAnswers: data.quizAnswers,
+      quizScore: data.quizScore,
     }).catch(() => {});
   }, [data, crmSent]);
 

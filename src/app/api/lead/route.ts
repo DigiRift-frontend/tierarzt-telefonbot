@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 interface LeadPayload {
   type: "quiz" | "ebook" | "contact" | "demo-gate";
@@ -9,6 +9,28 @@ interface LeadPayload {
   quizAnswers?: Record<string, number>;
   quizScore?: number;
   newsletterOptIn?: boolean;
+  userAgent?: string;
+  screenSize?: string;
+  referrer?: string;
+}
+
+function parseUserAgent(ua: string): { browser: string; os: string } {
+  let browser = "Unbekannt";
+  let os = "Unbekannt";
+
+  if (ua.includes("Firefox/")) browser = "Firefox";
+  else if (ua.includes("Edg/")) browser = "Edge";
+  else if (ua.includes("OPR/") || ua.includes("Opera")) browser = "Opera";
+  else if (ua.includes("Chrome/") && ua.includes("Safari/")) browser = "Chrome";
+  else if (ua.includes("Safari/") && !ua.includes("Chrome")) browser = "Safari";
+
+  if (ua.includes("Windows")) os = "Windows";
+  else if (ua.includes("Mac OS X") || ua.includes("Macintosh")) os = "macOS";
+  else if (ua.includes("Android")) os = "Android";
+  else if (ua.includes("iPhone") || ua.includes("iPad")) os = "iOS";
+  else if (ua.includes("Linux")) os = "Linux";
+
+  return { browser, os };
 }
 
 /* ------------------------------------------------------------------ */
@@ -59,7 +81,7 @@ async function subscribeToDigiLetter(body: LeadPayload) {
 const DIGICRM_URL = "https://digicrm.wirbauensoftware.de/api/leads/inbound";
 const DIGICRM_API_KEY = process.env.DIGICRM_API_KEY || "";
 
-function buildCrmDescription(body: LeadPayload): string {
+function buildCrmDescription(body: LeadPayload, ip: string): string {
   const lines: string[] = [];
   lines.push(`[tierarzt-telefonbot.de] ${body.type.toUpperCase()}`);
   lines.push("");
@@ -78,6 +100,18 @@ function buildCrmDescription(body: LeadPayload): string {
   }
 
   if (body.newsletterOptIn) lines.push("Newsletter: Ja");
+
+  // Client-Infos
+  lines.push("");
+  lines.push("--- Technische Infos ---");
+  lines.push(`IP: ${ip}`);
+  if (body.userAgent) {
+    const { browser, os } = parseUserAgent(body.userAgent);
+    lines.push(`Browser: ${browser}`);
+    lines.push(`Betriebssystem: ${os}`);
+  }
+  if (body.screenSize) lines.push(`Bildschirm: ${body.screenSize}`);
+  if (body.referrer) lines.push(`Referrer: ${body.referrer}`);
 
   return lines.join("\n");
 }
@@ -106,7 +140,7 @@ function getCrmCategory(type: LeadPayload["type"]): string {
   }
 }
 
-async function createCrmLead(body: LeadPayload) {
+async function createCrmLead(body: LeadPayload, ip: string) {
   if (!DIGICRM_API_KEY) {
     console.warn("[DIGICRM] No API key configured — skipping");
     return;
@@ -129,7 +163,7 @@ async function createCrmLead(body: LeadPayload) {
         email: body.email,
         company: body.praxisName || "",
         category: getCrmCategory(body.type),
-        description: buildCrmDescription(body),
+        description: buildCrmDescription(body, ip),
         tags: getCrmTags(body),
       }),
     });
@@ -144,12 +178,21 @@ async function createCrmLead(body: LeadPayload) {
 /* API Route                                                           */
 /* ------------------------------------------------------------------ */
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const body: LeadPayload = await request.json();
 
     if (!body.email || !body.email.includes("@")) {
       return NextResponse.json({ error: "Ungültige E-Mail-Adresse" }, { status: 400 });
+    }
+
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+      || request.headers.get("x-real-ip")
+      || "unbekannt";
+
+    // User-Agent vom Header falls nicht im Body
+    if (!body.userAgent) {
+      body.userAgent = request.headers.get("user-agent") || undefined;
     }
 
     console.log("[LEAD]", JSON.stringify({
@@ -160,11 +203,12 @@ export async function POST(request: Request) {
       name: body.name,
       quizScore: body.quizScore,
       newsletterOptIn: body.newsletterOptIn,
+      ip,
     }));
 
     // CRM: immer
     // DigiLetter: nur bei Quiz-Ergebnis und E-Book — NICHT bei Kontaktformular
-    const tasks: Promise<void>[] = [createCrmLead(body)];
+    const tasks: Promise<void>[] = [createCrmLead(body, ip)];
     if (body.type !== "contact") {
       tasks.push(subscribeToDigiLetter(body));
     }

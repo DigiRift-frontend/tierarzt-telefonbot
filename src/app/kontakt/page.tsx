@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { sendLead } from "@/lib/send-lead";
 
 export default function KontaktPage() {
   const [form, setForm] = useState({ firstName: "", lastName: "", email: "", praxisName: "", message: "" });
@@ -20,16 +21,12 @@ export default function KontaktPage() {
     setSubmitting(true);
 
     try {
-      await fetch("/api/lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "contact",
-          email: form.email,
-          name: `${form.firstName} ${form.lastName}`.trim(),
-          praxisName: form.praxisName,
-          message: form.message,
-        }),
+      await sendLead({
+        type: "contact",
+        email: form.email,
+        name: `${form.firstName} ${form.lastName}`.trim(),
+        praxisName: form.praxisName,
+        message: form.message,
       });
       setSent(true);
     } catch {

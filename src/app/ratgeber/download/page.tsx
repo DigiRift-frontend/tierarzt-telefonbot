@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { sendLead } from "@/lib/send-lead";
 
 export default function EbookDownloadPage() {
   return (
@@ -53,14 +54,10 @@ function EbookDownloadContent() {
           // Register lead in CRM (fire-and-forget)
           if (!crmSent) {
             setCrmSent(true);
-            fetch("/api/lead", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                type: "ebook",
-                email: data.email,
-                praxisName: data.praxisName,
-              }),
+            sendLead({
+              type: "ebook",
+              email: data.email,
+              praxisName: data.praxisName,
             }).catch(() => {});
           }
         }
