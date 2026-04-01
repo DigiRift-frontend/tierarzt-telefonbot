@@ -119,18 +119,18 @@ export default function AnwendungsfaellePage() {
               key={uc.title}
               className="bg-surface-container-lowest rounded-3xl shadow-sm overflow-hidden border border-outline-variant/10"
             >
-              <div className="p-8 md:p-12">
-                <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6 mb-8">
-                  <div className="shrink-0 w-14 h-14 sm:w-16 sm:h-16 bg-primary/5 text-primary rounded-2xl flex items-center justify-center">
-                    <span className="material-symbols-outlined text-3xl sm:text-4xl">{uc.icon}</span>
-                  </div>
-                  <div className="min-w-0">
-                    <h2 className="text-xl sm:text-2xl font-[family-name:var(--font-headline)] font-bold text-on-surface mb-2">
+              <div className="p-6 sm:p-8 md:p-12">
+                <div className="mb-8">
+                  <span className={`inline-block text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-4 ${uc.badgeColor}`}>
+                    {uc.badge}
+                  </span>
+                  <div className="flex items-center gap-4">
+                    <div className="shrink-0 w-12 h-12 sm:w-14 sm:h-14 bg-primary/5 text-primary rounded-2xl flex items-center justify-center">
+                      <span className="material-symbols-outlined text-2xl sm:text-3xl">{uc.icon}</span>
+                    </div>
+                    <h2 className="text-xl sm:text-2xl font-[family-name:var(--font-headline)] font-bold text-on-surface">
                       {uc.title}
                     </h2>
-                    <span className={`inline-block text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest ${uc.badgeColor}`}>
-                      {uc.badge}
-                    </span>
                   </div>
                 </div>
 
