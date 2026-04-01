@@ -22,28 +22,6 @@ export const metadata: Metadata = {
 
 const demos: Demo[] = [
   {
-    id: "notfall",
-    icon: "emergency",
-    title: "Notfall-Triage",
-    subtitle: "Besorgter Tierbesitzer meldet Vergiftungsverdacht",
-    description:
-      "Frau Meier ruft um 22 Uhr an — ihr Hund hat Schokolade gefressen. Der Bot erkennt den Notfall, stellt die richtigen Fragen und leitet sofort an den Notdienst weiter.",
-    duration: "1:00",
-    audioSrc: "/audio/demo-notfall-triage.mp3",
-    color: "bg-tertiary/10 text-tertiary",
-  },
-  {
-    id: "termin",
-    icon: "calendar_month",
-    title: "Terminbuchung",
-    subtitle: "Katzenbesitzer möchte Impftermin vereinbaren",
-    description:
-      "Herr Schmidt ruft an, um einen Impftermin für seine Katze zu buchen. Der Bot prüft die Verfügbarkeit, schlägt drei Optionen vor und bucht direkt ein.",
-    duration: "1:18",
-    audioSrc: "/audio/demo-terminbuchung.mp3",
-    color: "bg-primary/10 text-primary",
-  },
-  {
     id: "rezept",
     icon: "medication",
     title: "Rezept-Nachbestellung",
@@ -66,6 +44,17 @@ const demos: Demo[] = [
     color: "bg-primary/10 text-primary",
   },
   {
+    id: "termin",
+    icon: "calendar_month",
+    title: "Terminbuchung",
+    subtitle: "Katzenbesitzer möchte Impftermin vereinbaren",
+    description:
+      "Herr Schmidt ruft an, um einen Impftermin für seine Katze zu buchen. Der Bot prüft die Verfügbarkeit, schlägt drei Optionen vor und bucht direkt ein.",
+    duration: "1:18",
+    audioSrc: "/audio/demo-terminbuchung.mp3",
+    color: "bg-primary/10 text-primary",
+  },
+  {
     id: "erinnerung",
     icon: "vaccines",
     title: "Impf-Erinnerung",
@@ -75,6 +64,17 @@ const demos: Demo[] = [
     duration: "1:05",
     audioSrc: "/audio/demo-impf-erinnerung.mp3",
     color: "bg-secondary/10 text-secondary",
+  },
+  {
+    id: "notfall",
+    icon: "emergency",
+    title: "Notfall-Triage",
+    subtitle: "Besorgter Tierbesitzer meldet Vergiftungsverdacht",
+    description:
+      "Frau Meier ruft um 22 Uhr an — ihr Hund hat Schokolade gefressen. Der Bot erkennt den Notfall, stellt die richtigen Fragen und leitet sofort an den Notdienst weiter.",
+    duration: "1:00",
+    audioSrc: "/audio/demo-notfall-triage.mp3",
+    color: "bg-tertiary/10 text-tertiary",
   },
 ];
 
