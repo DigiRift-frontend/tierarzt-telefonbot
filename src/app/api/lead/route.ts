@@ -207,13 +207,11 @@ export async function POST(request: NextRequest) {
       ip,
     }));
 
-    // CRM: immer
-    // DigiLetter: nur bei Quiz-Ergebnis und E-Book — NICHT bei Kontaktformular
-    const tasks: Promise<void>[] = [createCrmLead(body, ip)];
-    if (body.type !== "contact") {
-      tasks.push(subscribeToDigiLetter(body));
-    }
-    await Promise.all(tasks);
+    // Immer beides: CRM + DigiLetter (Kontakt + Liste "Tierarzt-Telefonbot")
+    await Promise.all([
+      createCrmLead(body, ip),
+      subscribeToDigiLetter(body),
+    ]);
 
     return NextResponse.json({ success: true });
   } catch {
