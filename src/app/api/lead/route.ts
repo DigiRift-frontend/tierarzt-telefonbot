@@ -39,6 +39,7 @@ function parseUserAgent(ua: string): { browser: string; os: string } {
 
 const DIGILETTER_URL = "https://newsletter.wirbauensoftware.de/api/v1/subscribe";
 const DIGILETTER_API_KEY = process.env.DIGILETTER_API_KEY || "";
+const DIGILETTER_LIST_ID = "cmnh9n50l0001qc01x4ol27vo";
 
 async function subscribeToDigiLetter(body: LeadPayload) {
   if (!DIGILETTER_API_KEY) {
@@ -65,7 +66,7 @@ async function subscribeToDigiLetter(body: LeadPayload) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${DIGILETTER_API_KEY}`,
       },
-      body: JSON.stringify({ email: body.email, firstName, lastName, tags }),
+      body: JSON.stringify({ email: body.email, firstName, lastName, tags, listId: DIGILETTER_LIST_ID }),
     });
     const data = await res.json();
     console.log("[DIGILETTER]", res.status, JSON.stringify(data));

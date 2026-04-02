@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 
 const DIGILETTER_URL = "https://newsletter.wirbauensoftware.de/api/v1/subscribe";
 const DIGILETTER_API_KEY = process.env.DIGILETTER_API_KEY || "";
+const DIGILETTER_LIST_ID = "cmnh9n50l0001qc01x4ol27vo";
 const JWT_SECRET = process.env.QUIZ_JWT_SECRET || "tierarzt-telefonbot-quiz-secret-2026";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://tierarzt-telefonbot.de";
 
@@ -57,6 +58,7 @@ export async function POST(request: Request) {
             firstName,
             lastName,
             tags: ["tierarzt-telefonbot", "quelle-kostenrechner"],
+            listId: DIGILETTER_LIST_ID,
             redirectUrl: resultUrl,
           }),
         });
