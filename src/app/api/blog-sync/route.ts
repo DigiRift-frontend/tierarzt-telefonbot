@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
   } catch (err) {
     console.error("Blog sync failed:", err);
     return NextResponse.json(
-      { error: "Sync failed", details: String(err) },
+      { error: "Sync failed" },
       { status: 500 }
     );
   }

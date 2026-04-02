@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.QUIZ_JWT_SECRET || "tierarzt-telefonbot-quiz-secret-2026";
+const JWT_SECRET = process.env.QUIZ_JWT_SECRET;
+if (!JWT_SECRET) throw new Error("QUIZ_JWT_SECRET environment variable is required");
 
 export async function POST(request: Request) {
   try {

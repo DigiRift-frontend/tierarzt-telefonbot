@@ -4,7 +4,8 @@ import jwt from "jsonwebtoken";
 const DIGILETTER_URL = "https://newsletter.wirbauensoftware.de/api/v1/subscribe";
 const DIGILETTER_API_KEY = process.env.DIGILETTER_API_KEY || "";
 const DIGILETTER_LIST_ID = "cmnh9n50l0001qc01x4ol27vo";
-const JWT_SECRET = process.env.QUIZ_JWT_SECRET || "tierarzt-telefonbot-quiz-secret-2026";
+const JWT_SECRET = process.env.QUIZ_JWT_SECRET;
+if (!JWT_SECRET) throw new Error("QUIZ_JWT_SECRET environment variable is required");
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://tierarzt-telefonbot.de";
 
 interface EbookSubmitPayload {
