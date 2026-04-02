@@ -207,11 +207,11 @@ export async function POST(request: NextRequest) {
       ip,
     }));
 
-    // Immer beides: CRM + DigiLetter (Kontakt + Liste "Tierarzt-Telefonbot")
-    await Promise.all([
-      createCrmLead(body, ip),
-      subscribeToDigiLetter(body),
-    ]);
+    // CRM: immer
+    // DigiLetter: NICHT hier — läuft über quiz-submit / ebook-submit (DOI-Flow)
+    // Diese API wird erst NACH DOI-Bestätigung aufgerufen (Ergebnis-Seite / Download-Seite)
+    // Ein erneuter subscribe-Call würde den Status auf PENDING zurücksetzen
+    await createCrmLead(body, ip);
 
     return NextResponse.json({ success: true });
   } catch {
