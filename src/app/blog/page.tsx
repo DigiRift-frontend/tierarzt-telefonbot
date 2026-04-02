@@ -3,9 +3,14 @@ import type { Metadata } from "next";
 import { getArticles } from "@/lib/digimedia";
 
 export const metadata: Metadata = {
-  title: "Blog — KI-Telefonie für Tierärzte",
+  title: "Blog — KI-Telefonie fuer Tieraerzte",
   description:
     "Artikel, Insights und Praxis-Tipps rund um KI-Telefonbots in der Tierarztpraxis.",
+  openGraph: {
+    title: "Blog — KI-Telefonie fuer Tieraerzte",
+    description: "Artikel, Insights und Praxis-Tipps rund um KI-Telefonbots in der Tierarztpraxis.",
+    url: "https://tierarzt-telefonbot.de/blog",
+  },
 };
 
 // Revalidate every 30 minutes — checks DigiMedia for new articles

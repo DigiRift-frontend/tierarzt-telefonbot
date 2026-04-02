@@ -6,6 +6,8 @@ import { getArticles, getArticleBySlug } from "@/lib/digimedia";
 // Revalidate every 30 minutes
 export const revalidate = 1800;
 
+const BASE = "https://tierarzt-telefonbot.de";
+
 type Props = {
   params: Promise<{ slug: string }>;
 };
@@ -18,9 +20,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: article.meta_title || article.title,
     description: article.meta_description || article.summary,
+    keywords: article.keywords?.length ? article.keywords : undefined,
+    authors: [{ name: "Kamil Gawlik", url: "https://digirift.com" }],
     openGraph: {
       title: article.meta_tags?.["og:title"] || article.title,
       description: article.meta_tags?.["og:description"] || article.summary,
+      url: `${BASE}/blog/${slug}`,
       images: article.featured_image_url
         ? [
             {
@@ -33,6 +38,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         : [],
       type: "article",
       locale: "de_DE",
+      publishedTime: article.published_at || undefined,
+      modifiedTime: article.updated_at || undefined,
+      authors: ["Kamil Gawlik"],
     },
     twitter: {
       card: "summary_large_image",
@@ -40,11 +48,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description:
         article.meta_tags?.["twitter:description"] || article.summary,
       images: article.featured_image_url ? [article.featured_image_url] : [],
+      creator: "@digirift",
     },
     alternates: {
-      canonical: article.canonical_url,
+      canonical: article.canonical_url || `${BASE}/blog/${slug}`,
     },
-    robots: article.robots,
+    robots: article.robots || "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
   };
 }
 
@@ -57,21 +66,117 @@ export async function generateStaticParams() {
   }
 }
 
+function buildBreadcrumbSchema(title: string, slug: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Start", item: BASE },
+      { "@type": "ListItem", position: 2, name: "Blog", item: `${BASE}/blog` },
+      { "@type": "ListItem", position: 3, name: title, item: `${BASE}/blog/${slug}` },
+    ],
+  };
+}
+
+function buildArticleSchema(article: {
+  title: string;
+  slug: string;
+  summary: string;
+  meta_description: string;
+  featured_image_url: string;
+  published_at: string | null;
+  updated_at: string;
+  keywords: string[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: article.title,
+    description: article.meta_description || article.summary,
+    image: article.featured_image_url || undefined,
+    datePublished: article.published_at || undefined,
+    dateModified: article.updated_at || undefined,
+    url: `${BASE}/blog/${article.slug}`,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${BASE}/blog/${article.slug}`,
+    },
+    author: {
+      "@type": "Person",
+      name: "Kamil Gawlik",
+      jobTitle: "Geschaeftsfuehrer",
+      url: "https://digirift.com",
+    },
+    publisher: {
+      "@type": "Organization",
+      "@id": `${BASE}/#organization`,
+      name: "DigiRift GmbH",
+      url: BASE,
+      logo: {
+        "@type": "ImageObject",
+        url: `${BASE}/icon.svg`,
+      },
+    },
+    keywords: article.keywords?.join(", ") || undefined,
+    inLanguage: "de-DE",
+  };
+}
+
+function buildFaqSchema(faq: { question: string; answer: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+}
+
 export default async function BlogArticlePage({ params }: Props) {
   const { slug } = await params;
   const article = await getArticleBySlug(slug);
   if (!article) notFound();
 
+  // Use API-provided schemas if available, otherwise generate fallback
+  const hasApiSchemas = article.structured_data && article.structured_data.length > 0;
+
   return (
     <>
-      {/* JSON-LD Structured Data */}
-      {article.structured_data?.map((schema, i) => (
+      {/* JSON-LD: API-provided schemas */}
+      {hasApiSchemas && article.structured_data.map((schema, i) => (
         <script
-          key={i}
+          key={`api-${i}`}
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
       ))}
+
+      {/* JSON-LD: BlogPosting fallback (only if API doesn't provide) */}
+      {!hasApiSchemas && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildArticleSchema(article)) }}
+        />
+      )}
+
+      {/* JSON-LD: BreadcrumbList (always) */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbSchema(article.title, slug)) }}
+      />
+
+      {/* JSON-LD: FAQPage (if FAQ data exists) */}
+      {article.faq && article.faq.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema(article.faq)) }}
+        />
+      )}
 
       {/* Hero */}
       <article className="pt-28 md:pt-40 pb-20 bg-surface">
@@ -94,15 +199,21 @@ export default async function BlogArticlePage({ params }: Props) {
             </span>
           </nav>
 
-          {/* Category & Date */}
+          {/* Category, Author & Date */}
           <div className="flex flex-wrap items-center gap-3 mb-6">
             {article.categories.length > 0 && (
               <span className="px-3 py-1 bg-primary-container/10 text-primary text-xs font-semibold rounded-full">
                 {article.categories[0]}
               </span>
             )}
+            <span className="text-sm text-outline">
+              Von <strong className="text-on-surface-variant">Kamil Gawlik</strong>
+            </span>
             {article.published_at && (
-              <time className="text-sm text-outline">
+              <time
+                className="text-sm text-outline"
+                dateTime={article.published_at}
+              >
                 {new Date(article.published_at).toLocaleDateString("de-DE", {
                   year: "numeric",
                   month: "long",
@@ -133,6 +244,7 @@ export default async function BlogArticlePage({ params }: Props) {
                 width={article.featured_image_width}
                 height={article.featured_image_height}
                 className="w-full h-auto"
+                loading="eager"
               />
             </div>
           )}
@@ -154,7 +266,7 @@ export default async function BlogArticlePage({ params }: Props) {
           {article.faq && article.faq.length > 0 && (
             <section className="mt-16 pt-10 border-t border-outline-variant/20">
               <h2 className="text-2xl font-[family-name:var(--font-headline)] font-bold text-on-surface mb-8">
-                Häufig gestellte Fragen
+                Haeufig gestellte Fragen
               </h2>
               <div className="space-y-6">
                 {article.faq.map((item, i) => (
