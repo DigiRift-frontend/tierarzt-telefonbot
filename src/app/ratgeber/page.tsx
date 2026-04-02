@@ -14,7 +14,7 @@ export default function RatgeberPage() {
 
   const submit = async () => {
     if (!email || !email.includes("@")) {
-      setError("Bitte geben Sie eine gueltige E-Mail-Adresse ein.");
+      setError("Bitte geben Sie eine gültige E-Mail-Adresse ein.");
       return;
     }
     setError("");
@@ -47,10 +47,10 @@ export default function RatgeberPage() {
 
   const chapters = [
     { icon: "gavel", title: "Was darf ein KI-Telefonbot in der Tierarztpraxis? Was nicht?" },
-    { icon: "checklist", title: "DSGVO-Anforderungen Schritt fuer Schritt erklaert" },
-    { icon: "description", title: "AV-Vertrag Checkliste — worauf Sie achten muessen" },
-    { icon: "policy", title: "EU-AI-Act: Was bedeutet das konkret fuer Ihre Praxis?" },
-    { icon: "lightbulb", title: "5 Praxis-Tipps fuer den datenschutzkonformen Einsatz" },
+    { icon: "checklist", title: "DSGVO-Anforderungen Schritt für Schritt erklärt" },
+    { icon: "description", title: "AV-Vertrag Checkliste — worauf Sie achten müssen" },
+    { icon: "policy", title: "EU-AI-Act: Was bedeutet das konkret für Ihre Praxis?" },
+    { icon: "lightbulb", title: "5 Praxis-Tipps für den datenschutzkonformen Einsatz" },
   ];
 
   return (
@@ -61,12 +61,12 @@ export default function RatgeberPage() {
             Kostenloser Ratgeber
           </span>
           <h1 className="text-4xl md:text-5xl font-[family-name:var(--font-headline)] font-extrabold text-on-surface tracking-tight leading-[1.1] mb-8">
-            DSGVO-Leitfaden fuer{" "}
+            DSGVO-Leitfaden für{" "}
             <span className="text-primary">KI-Telefonie in der Tierarztpraxis</span>
           </h1>
           <p className="text-xl text-on-surface-variant leading-relaxed max-w-2xl mx-auto">
-            Alles was Sie ueber Datenschutz, AV-Vertraege und den EU-AI-Act wissen muessen —
-            verstaendlich erklaert, mit konkreten Checklisten.
+            Alles was Sie über Datenschutz, AV-Verträge und den EU-AI-Act wissen müssen —
+            verständlich erklärt, mit konkreten Checklisten.
           </p>
         </div>
       </section>
@@ -116,17 +116,17 @@ export default function RatgeberPage() {
                     <span className="material-symbols-outlined text-3xl">mark_email_read</span>
                   </div>
                   <h3 className="text-xl font-[family-name:var(--font-headline)] font-bold text-on-surface mb-4">
-                    Bitte E-Mail bestaetigen
+                    Bitte E-Mail bestätigen
                   </h3>
                   <p className="text-on-surface-variant mb-2">
                     Wir haben Ihnen eine E-Mail an <strong className="text-on-surface">{email}</strong> gesendet.
                   </p>
                   <p className="text-on-surface-variant mb-6">
-                    Klicken Sie auf den Bestaetigungslink, um den Leitfaden herunterzuladen.
+                    Klicken Sie auf den Bestätigungslink, um den Leitfaden herunterzuladen.
                   </p>
                   <div className="bg-surface-container-low rounded-2xl p-4 text-sm text-on-surface-variant">
                     <span className="material-symbols-outlined text-base align-middle mr-1">info</span>
-                    Keine E-Mail erhalten? Pruefen Sie Ihren Spam-Ordner.
+                    Keine E-Mail erhalten? Prüfen Sie Ihren Spam-Ordner.
                   </div>
                 </div>
               ) : phase === "redirect" ? (
@@ -135,7 +135,7 @@ export default function RatgeberPage() {
                     <span className="material-symbols-outlined text-3xl">download</span>
                   </div>
                   <h3 className="text-xl font-[family-name:var(--font-headline)] font-bold text-on-surface mb-4">
-                    E-Mail bereits bestaetigt!
+                    E-Mail bereits bestätigt!
                   </h3>
                   <p className="text-on-surface-variant mb-6">
                     Sie werden zum Download weitergeleitet...
@@ -186,7 +186,7 @@ export default function RatgeberPage() {
                         className="mt-1 rounded border-outline-variant text-primary focus:ring-primary"
                       />
                       <span className="text-sm text-on-surface-variant">
-                        Ja, ich moechte gelegentlich Praxis-Tipps zu KI-Telefonie erhalten.
+                        Ja, ich möchte gelegentlich Praxis-Tipps zu KI-Telefonie erhalten.
                       </span>
                     </label>
 
@@ -205,7 +205,7 @@ export default function RatgeberPage() {
                   <p className="text-xs text-on-surface-variant text-center mt-4">
                     Ihre Daten werden vertraulich behandelt.{" "}
                     <Link href="/datenschutz" className="text-primary hover:underline">
-                      Datenschutzerklaerung
+                      Datenschutzerklärung
                     </Link>
                   </p>
                 </div>

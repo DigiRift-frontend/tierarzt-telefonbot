@@ -56,13 +56,13 @@ export function CookieBanner() {
               <span className="material-symbols-outlined text-primary text-3xl mt-0.5">cookie</span>
               <div>
                 <h3 className="text-lg font-bold text-on-surface font-[family-name:var(--font-headline)]">
-                  Wir respektieren Ihre Privatsphaere
+                  Wir respektieren Ihre Privatsphäre
                 </h3>
                 <p className="text-sm text-on-surface-variant mt-1 leading-relaxed font-[family-name:var(--font-body)]">
-                  Wir verwenden Cookies, um Ihnen die bestmoegliche Erfahrung auf unserer Website zu bieten,
+                  Wir verwenden Cookies, um Ihnen die bestmögliche Erfahrung auf unserer Website zu bieten,
                   den Datenverkehr zu analysieren und unsere Inhalte zu personalisieren.{" "}
                   <Link href="/datenschutz" className="text-primary underline hover:text-primary-container">
-                    Datenschutzerklaerung
+                    Datenschutzerklärung
                   </Link>
                 </p>
               </div>
@@ -78,7 +78,7 @@ export function CookieBanner() {
                       Notwendig
                     </span>
                     <p className="text-xs text-on-surface-variant">
-                      Fuer grundlegende Website-Funktionen erforderlich.
+                      Für grundlegende Website-Funktionen erforderlich.
                     </p>
                   </div>
                   <div className="relative">

@@ -85,10 +85,10 @@ function EbookDownloadContent() {
               <span className="material-symbols-outlined text-3xl">error</span>
             </div>
             <h1 className="text-2xl font-[family-name:var(--font-headline)] font-bold text-on-surface mb-4">
-              Link ungueltig oder abgelaufen
+              Link ungültig oder abgelaufen
             </h1>
             <p className="text-on-surface-variant mb-8">
-              Dieser Download-Link ist nicht mehr gueltig. Bitte fordern Sie den Leitfaden erneut an.
+              Dieser Download-Link ist nicht mehr gültig. Bitte fordern Sie den Leitfaden erneut an.
             </p>
             <Link
               href="/ratgeber"
@@ -108,7 +108,7 @@ function EbookDownloadContent() {
               Ihr Leitfaden ist bereit!
             </h1>
             <p className="text-on-surface-variant mb-8">
-              Vielen Dank fuer Ihr Interesse. Klicken Sie auf den Button, um den
+              Vielen Dank für Ihr Interesse. Klicken Sie auf den Button, um den
               DSGVO-Leitfaden herunterzuladen.
             </p>
 
@@ -135,17 +135,17 @@ function EbookDownloadContent() {
 
             <div className="bg-surface-container-lowest rounded-3xl shadow-sm border border-outline-variant/10 p-8">
               <h2 className="text-xl font-[family-name:var(--font-headline)] font-bold text-on-surface mb-3">
-                Naechster Schritt?
+                Nächster Schritt?
               </h2>
               <p className="text-on-surface-variant mb-6">
-                Im kostenlosen Erstgespraech klaeren wir alle Ihre Fragen — zu Datenschutz,
+                Im kostenlosen Erstgespräch klären wir alle Ihre Fragen — zu Datenschutz,
                 Technik und Kosten. Unverbindlich, in 30 Minuten.
               </p>
               <Link
                 href="/kontakt"
                 className="inline-flex items-center gap-2 text-primary font-[family-name:var(--font-headline)] font-bold hover:underline"
               >
-                Erstgespraech vereinbaren
+                Erstgespräch vereinbaren
                 <span className="material-symbols-outlined text-lg">arrow_forward</span>
               </Link>
             </div>

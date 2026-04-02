@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "tierarzt-telefonbot.de — KI-Telefonbot fuer Tierarztpraxen";
+export const alt = "tierarzt-telefonbot.de — KI-Telefonbot für Tierarztpraxen";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -65,7 +65,7 @@ export default function OgImage() {
             marginBottom: "40px",
           }}
         >
-          Der KI-Telefonbot fuer Ihre Tierarztpraxis. Notfall-Triage,
+          Der KI-Telefonbot für Ihre Tierarztpraxis. Notfall-Triage,
           Terminbuchung, Rezeptbestellungen.
         </div>
         <div

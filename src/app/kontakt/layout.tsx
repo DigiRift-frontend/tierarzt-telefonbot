@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Kontakt — Kostenloses Erstgespraech vereinbaren",
+  title: "Kontakt — Kostenloses Erstgespräch vereinbaren",
   description:
-    "Vereinbaren Sie ein kostenloses 30-Minuten-Erstgespraech. Wir konfigurieren einen individuellen KI-Telefonbot fuer Ihre Tierarztpraxis.",
+    "Vereinbaren Sie ein kostenloses 30-Minuten-Erstgespräch. Wir konfigurieren einen individuellen KI-Telefonbot für Ihre Tierarztpraxis.",
   openGraph: {
-    title: "Kontakt — Kostenloses Erstgespraech vereinbaren",
-    description: "30 Minuten, kostenlos, unverbindlich. Wir zeigen Ihnen, was ein KI-Telefonbot fuer Ihre Praxis leisten kann.",
+    title: "Kontakt — Kostenloses Erstgespräch vereinbaren",
+    description: "30 Minuten, kostenlos, unverbindlich. Wir zeigen Ihnen, was ein KI-Telefonbot für Ihre Praxis leisten kann.",
   },
 };
 

@@ -21,15 +21,15 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "tierarzt-telefonbot.de — KI-Telefonbot fuer Tierarztpraxen",
+        alt: "tierarzt-telefonbot.de — KI-Telefonbot für Tierarztpraxen",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "KI-Telefonbot fuer Tieraerzte | tierarzt-telefonbot.de",
+    title: "KI-Telefonbot für Tierärzte | tierarzt-telefonbot.de",
     description:
-      "Der KI-Telefonbot fuer Ihre Tierarztpraxis. Notfall-Triage, Terminbuchung, Rezeptbestellungen — Full-Service von DigiRift.",
+      "Der KI-Telefonbot für Ihre Tierarztpraxis. Notfall-Triage, Terminbuchung, Rezeptbestellungen — Full-Service von DigiRift.",
     images: ["/opengraph-image"],
   },
   manifest: "/manifest.json",
@@ -96,9 +96,9 @@ export default function RootLayout({
                 {
                   "@type": "Service",
                   "@id": "https://tierarzt-telefonbot.de/#service",
-                  name: "KI-Telefonbot fuer Tierarztpraxen",
+                  name: "KI-Telefonbot für Tierarztpraxen",
                   description:
-                    "Intelligenter KI-Telefonbot fuer Tierarztpraxen. Notfall-Triage, Terminbuchung, Rezeptbestellungen, Impf-Erinnerungen — 24/7, DSGVO-konform, Full-Service.",
+                    "Intelligenter KI-Telefonbot für Tierarztpraxen. Notfall-Triage, Terminbuchung, Rezeptbestellungen, Impf-Erinnerungen — 24/7, DSGVO-konform, Full-Service.",
                   provider: { "@id": "https://tierarzt-telefonbot.de/#organization" },
                   serviceType: "KI-Telefonie",
                   areaServed: { "@type": "Country", name: "Germany" },
@@ -112,7 +112,7 @@ export default function RootLayout({
                           "@type": "Service",
                           name: "KI-Telefonbot Full-Service",
                           description:
-                            "Komplettloesung: Einrichtung, Training, laufende Optimierung, DSGVO-Dokumentation, AV-Vertrag inklusive.",
+                            "Komplettlösung: Einrichtung, Training, laufende Optimierung, DSGVO-Dokumentation, AV-Vertrag inklusive.",
                         },
                       },
                     ],

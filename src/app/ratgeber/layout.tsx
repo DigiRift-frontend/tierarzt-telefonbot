@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "DSGVO-Leitfaden — Kostenloser Ratgeber fuer Tierarztpraxen",
+  title: "DSGVO-Leitfaden — Kostenloser Ratgeber für Tierarztpraxen",
   description:
-    "Kostenloser DSGVO-Leitfaden fuer KI-Telefonie in der Tierarztpraxis. Datenschutz, AV-Vertraege, EU-AI-Act — verstaendlich erklaert mit Checklisten.",
+    "Kostenloser DSGVO-Leitfaden für KI-Telefonie in der Tierarztpraxis. Datenschutz, AV-Verträge, EU-AI-Act — verständlich erklärt mit Checklisten.",
   openGraph: {
-    title: "DSGVO-Leitfaden — Kostenloser Ratgeber fuer Tierarztpraxen",
-    description: "Alles was Sie ueber Datenschutz und KI-Telefonie wissen muessen. Kostenloser PDF-Download.",
+    title: "DSGVO-Leitfaden — Kostenloser Ratgeber für Tierarztpraxen",
+    description: "Alles was Sie über Datenschutz und KI-Telefonie wissen müssen. Kostenloser PDF-Download.",
   },
 };
 
