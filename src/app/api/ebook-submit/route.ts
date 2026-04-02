@@ -4,8 +4,11 @@ import jwt from "jsonwebtoken";
 const DIGILETTER_URL = "https://newsletter.wirbauensoftware.de/api/v1/subscribe";
 const DIGILETTER_API_KEY = process.env.DIGILETTER_API_KEY || "";
 const DIGILETTER_LIST_ID = "cmnh9n50l0001qc01x4ol27vo";
-const JWT_SECRET = process.env.QUIZ_JWT_SECRET;
-if (!JWT_SECRET) throw new Error("QUIZ_JWT_SECRET environment variable is required");
+function getJwtSecret() {
+  const secret = process.env.QUIZ_JWT_SECRET;
+  if (!secret) throw new Error("QUIZ_JWT_SECRET environment variable is required");
+  return secret;
+}
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://tierarzt-telefonbot.de";
 
 interface EbookSubmitPayload {
@@ -28,7 +31,7 @@ export async function POST(request: Request) {
         praxisName: body.praxisName,
         type: "ebook",
       },
-      JWT_SECRET,
+      getJwtSecret(),
       { expiresIn: "7d" }
     );
 

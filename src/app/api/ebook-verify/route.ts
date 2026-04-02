@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.QUIZ_JWT_SECRET;
-if (!JWT_SECRET) throw new Error("QUIZ_JWT_SECRET environment variable is required");
+function getJwtSecret() {
+  const secret = process.env.QUIZ_JWT_SECRET;
+  if (!secret) throw new Error("QUIZ_JWT_SECRET environment variable is required");
+  return secret;
+}
 
 export async function POST(request: Request) {
   try {
@@ -12,7 +15,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Token fehlt" }, { status: 400 });
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as {
+    const decoded = jwt.verify(token, getJwtSecret()) as {
       email: string;
       praxisName?: string;
       type: string;
